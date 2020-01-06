@@ -10,28 +10,6 @@ namespace DurableFunc
 {
     public static class ScheduleExam
     {
-        //[FunctionName("ScheduleExam")]
-        //public static async Task<List<string>> RunOrchestrator(
-        //    [OrchestrationTrigger] IDurableOrchestrationContext context)
-        //{
-        //    SayHelloRequest data = context.GetInput<SayHelloRequest>();
-        //    var outputs = new List<string>();
-
-        //    foreach (var city in data.CityNames)
-        //    {
-        //        outputs.Add(await context.CallActivityAsync<string>("ScheduleExam_Hello", city));
-        //    }
-
-        //    return outputs;
-        //}
-
-        //[FunctionName("ScheduleExam_Hello")]
-        //public static string SayHello([ActivityTrigger] string name, ILogger log)
-        //{
-        //    log.LogInformation(name);
-        //    return $"AZ-{name}";
-        //}
-
 
         [FunctionName("Orchestration_ScheduleExam")]
         public static async Task<List<string>> RunOrchestrator(
@@ -64,9 +42,9 @@ namespace DurableFunc
         {
             try
             {
-                //var data = await req.Content.ReadAsAsync<SayHelloRequest>();
-
+                // INPUT : {"PartitionKey":["input-040120201213","input-050120201213","input-060120201213"]}
                 var data = await req.Content.ReadAsAsync<PartitionKeyGenerator>();
+
                 // Function input comes from the request content.
                 string instanceId = await starter.StartNewAsync("Orchestration_ScheduleExam", data);
 
@@ -80,11 +58,6 @@ namespace DurableFunc
             }
         }
     }
-
-    //class SayHelloRequest
-    //{
-    //    public List<string> CityNames { get; set; }
-    //}
 
     class PartitionKeyGenerator
     {
