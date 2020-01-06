@@ -15,15 +15,18 @@ namespace DurableFunc
         public static async Task<List<string>> RunOrchestrator(
         [OrchestrationTrigger] IDurableOrchestrationContext context)
         {
+
             PartitionKeyGenerator data = context.GetInput<PartitionKeyGenerator>();
+
+            string tableName = Constants.TableName;
+            TableStorage tableStore = new TableStorage(tableName);
 
             var outputs = new List<string>();
             foreach (var item in data.PartitionKey)
             {
+                List<CandidatesEntity> candidates = tableStore.GetAll<CandidatesEntity>(item);
                 outputs.Add(await context.CallActivityAsync<string>("Activity_ScheduleExam", item));
             }
-
-
             return outputs;
         }
 
