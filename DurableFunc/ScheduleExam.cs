@@ -1,11 +1,10 @@
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace DurableFunc
 {
@@ -34,19 +33,23 @@ namespace DurableFunc
         //}
 
 
-        [FunctionName("ScheduleExam")]
+        [FunctionName("Orchestration_ScheduleExam")]
         public static async Task<List<string>> RunOrchestrator(
         [OrchestrationTrigger] IDurableOrchestrationContext context)
         {
             PartitionKeyGenerator data = context.GetInput<PartitionKeyGenerator>();
-            var outputs = new List<string>();
 
-            outputs.Add(await context.CallActivityAsync<string>("ScheduleExam_Hello", data.PartitionKey[0]));
+            var outputs = new List<string>();
+            foreach (var item in data.PartitionKey)
+            {
+                outputs.Add(await context.CallActivityAsync<string>("Activity_ScheduleExam", item));
+            }
+
 
             return outputs;
         }
 
-        [FunctionName("ScheduleExam_Hello")]
+        [FunctionName("Activity_ScheduleExam")]
         public static string SayHello([ActivityTrigger] string name, ILogger log)
         {
             log.LogInformation(name);
@@ -62,10 +65,10 @@ namespace DurableFunc
             try
             {
                 //var data = await req.Content.ReadAsAsync<SayHelloRequest>();
-                
+
                 var data = await req.Content.ReadAsAsync<PartitionKeyGenerator>();
                 // Function input comes from the request content.
-                string instanceId = await starter.StartNewAsync("ScheduleExam", data);
+                string instanceId = await starter.StartNewAsync("Orchestration_ScheduleExam", data);
 
                 log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
 
