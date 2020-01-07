@@ -10,6 +10,7 @@ namespace DurableFunc
 {
     public static class ScheduleExam
     {
+        //http://dontcodetired.com/blog/?tag=durfuncseries
 
         [FunctionName("Orchestration_ScheduleExam")]
         public static async Task<List<string>> RunOrchestrator(
