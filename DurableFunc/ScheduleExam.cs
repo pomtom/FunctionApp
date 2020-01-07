@@ -15,26 +15,30 @@ namespace DurableFunc
         public static async Task<List<string>> RunOrchestrator(
         [OrchestrationTrigger] IDurableOrchestrationContext context)
         {
-
             PartitionKeyGenerator data = context.GetInput<PartitionKeyGenerator>();
-
-            string tableName = Constants.TableName;
-            TableStorage tableStore = new TableStorage(tableName);
-
             var outputs = new List<string>();
+
             foreach (var item in data.PartitionKey)
             {
-                List<CandidatesEntity> candidates = tableStore.GetAll<CandidatesEntity>(item);
                 outputs.Add(await context.CallActivityAsync<string>("Activity_ScheduleExam", item));
             }
+
             return outputs;
         }
 
         [FunctionName("Activity_ScheduleExam")]
-        public static string SayHello([ActivityTrigger] string name, ILogger log)
+        public static string RunActivity([ActivityTrigger] string name, ILogger log)
         {
-            log.LogInformation(name);
-            return $"AZ-{name}";
+            string tableName = Constants.TableName;
+            TableStorage tableStore = new TableStorage(tableName);
+
+            List<CandidatesEntity> candidates = tableStore.GetAll<CandidatesEntity>(name);
+            foreach (var item in candidates)
+            {
+                log.LogInformation($"-------------------------------------------------Completion date - {item.CompletionDate}");
+            }
+
+            return $"AZ- {name}";
         }
 
         [FunctionName("ScheduleExam_HttpStart")]
@@ -62,7 +66,7 @@ namespace DurableFunc
         }
     }
 
-    class PartitionKeyGenerator
+    public class PartitionKeyGenerator
     {
         public List<string> PartitionKey { get; set; }
     }
