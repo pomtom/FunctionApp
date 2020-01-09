@@ -11,7 +11,7 @@ variables:
   azureSubscription: 'acd12fda-9311-47ac-b99d-75e1ed0a9632'
 
   # Function app name
-  functionAppName: ''
+  functionAppName: 'durablefunc'
 
   # Agent VM image name
   vmImageName: 'vs2017-win2016'
