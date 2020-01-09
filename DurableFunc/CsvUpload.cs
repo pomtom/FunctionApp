@@ -68,13 +68,15 @@ namespace DurableFunc
                 {
                     throw new Exception(e.Message);
                 }
-                
 
+                log.LogInformation("Calling https://zixerapp.azurewebsites.net/api/ScheduleExam_HttpStart");
                 BaseClient client = new BaseClient("https://zixerapp.azurewebsites.net/api/ScheduleExam_HttpStart");
                 PartitionKeyGenerator keyGen = new PartitionKeyGenerator();
                 keyGen.PartitionKey = new List<string> { name };
                 string jsonSerialize = JsonConvert.SerializeObject(keyGen);
                 var response = client.PostCallAsync("", jsonSerialize).GetAwaiter().GetResult();
+                log.LogInformation(response.ResponseMessage);
+
             }
             catch (Exception ex)
             {

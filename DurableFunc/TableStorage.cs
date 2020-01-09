@@ -29,7 +29,7 @@ namespace DurableFunc
         {
 
             // Retrieve the storage account from the connection string.
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("UseDevelopmentStorage=true");
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("AzureWebJobsStorage"));
 
             // Create the table client.
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
