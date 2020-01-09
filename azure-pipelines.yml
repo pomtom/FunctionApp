@@ -30,11 +30,19 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
-    - powershell: |
-        if (Test-Path "extensions.csproj") {
-            dotnet build extensions.csproj --output ./$(workingDirectory)/bin
-        }
-      displayName: 'Build extensions'
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: 'build'
+        projects: |
+          $(workingDirectory)/*.csproj
+        arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
+        
+    # - powershell: |
+    #     if (Test-Path "extensions.csproj") {
+    #         dotnet build extensions.csproj --output ./$(workingDirectory)/bin
+    #     }
+    #   displayName: 'Build extensions'
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'
