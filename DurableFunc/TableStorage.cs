@@ -29,8 +29,10 @@ namespace DurableFunc
         {
 
             // Retrieve the storage account from the connection string.
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("AzureWebJobsStorage"));
 
+            //CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("AzureWebJobsStorage")); // Storage sdk has issue with getting keys from config file. Issue number 4010 [https://github.com/Azure/azure-sdk-for-net/issues/4010]
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=storageaccountrgukbc29;AccountKey=IV+Lp+naqQDGbgGIrNP7IfCd52AKJVjcLl7ubLs6FV0/N8YN179dg7OnkvTdGZQF/B3R28U2XR7kA7Jxj4s/wQ==;EndpointSuffix=core.windows.net");
             // Create the table client.
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
 
