@@ -13,6 +13,8 @@ namespace DurableFunc
 {
     public static class CsvUpload
     {
+        //https://github.com/didourebai/CSVHelperExample/tree/master
+
         [FunctionName("CsvUpload")]
         public static void Run([BlobTrigger("inputcsv/{name}.csv", Connection = "AzureWebJobsStorage")]Stream myBlob, string name, ILogger log)
         {
@@ -66,9 +68,9 @@ namespace DurableFunc
                 {
                     throw new Exception(e.Message);
                 }
+                
 
-
-                BaseClient client = new BaseClient("http://localhost:7071/api/ScheduleExam_HttpStart");
+                BaseClient client = new BaseClient("https://zixerapp.azurewebsites.net/api/ScheduleExam_HttpStart");
                 PartitionKeyGenerator keyGen = new PartitionKeyGenerator();
                 keyGen.PartitionKey = new List<string> { name };
                 string jsonSerialize = JsonConvert.SerializeObject(keyGen);
