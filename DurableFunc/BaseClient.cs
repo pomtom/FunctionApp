@@ -34,6 +34,20 @@ namespace DurableFunc
 
         }
 
+        public BaseClient(string baseAddress)
+        {
+            HttpClientHandler handler = new HttpClientHandler()
+            {
+                Proxy = new WebProxy("http://127.0.0.1:8888"),
+                UseProxy = false,
+            };
+
+            client = new HttpClient(handler);
+            client.BaseAddress = new Uri(baseAddress);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            baseresponse = new BaseResponse();
+        }
 
         //public async Task<string> GetcallAsync(string endpoint)
         //{

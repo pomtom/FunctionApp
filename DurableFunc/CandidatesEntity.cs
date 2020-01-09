@@ -12,10 +12,10 @@ namespace DurableFunc
 
         }
 
-        public CandidatesEntity(string partitionKey, int rowkey)
+        public CandidatesEntity(string partitionKey, string rowkey)
         {
             PartitionKey = partitionKey;
-            RowKey = rowkey.ToString("00000000");
+            RowKey = rowkey;
         }
 
         public int Id { get; set; }
