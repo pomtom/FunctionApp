@@ -108,6 +108,7 @@ namespace DurableFunc
             TableStorage tblStore = new TableStorage(Constants.TableName);
             tblStore.InsertBatch<CandidatesEntity>(entities);
         }
+
     }
    
 }
